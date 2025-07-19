@@ -2,10 +2,28 @@
 const fechaActualElement = document.getElementById('fecha-actual');
 const eventoHistoricoElement = document.getElementById('evento-historico');
 const cargandoElement = document.getElementById('cargando');
+const contadorElement = document.getElementById('contador');
+const actualElement = document.getElementById('actual');
+const totalElement = document.getElementById('total');
+const btnAnterior = document.getElementById('btn-anterior');
+const btnSiguiente = document.getElementById('btn-siguiente');
+const selectMes = document.getElementById('select-mes');
+const selectDia = document.getElementById('select-dia');
+const btnHoy = document.getElementById('btn-hoy');
+
+// variables globales
+let efemerides = [];
+let indiceActual = 0;
+const maxEfemerides = 5;
+let fechaSeleccionada = new Date();
+
+// generar año aleatorio
+function generarAnoAleatorio() {
+    return Math.floor(Math.random() * 100) + 1900; // años entre 1900 y 1999
+}
 
 // formatear fecha en español
-function formatearFechaActual() {
-    const ahora = new Date();
+function formatearFechaActual(fecha = new Date()) {
     const opciones = {
         weekday: 'long',
         year: 'numeric',
@@ -13,12 +31,12 @@ function formatearFechaActual() {
         day: 'numeric'
     };
     
-    return ahora.toLocaleDateString('es-ES', opciones);
+    return fecha.toLocaleDateString('es-ES', opciones);
 }
 
 // generar número aleatorio basado en fecha
 function obtenerAleatorioConSemilla(fecha) {
-    const semilla = fecha.getFullYear() * 10000 + (fecha.getMonth() + 1) * 100 + fecha.getDate();
+    const semilla = (fecha.getMonth() + 1) * 100 + fecha.getDate();
     const x = Math.sin(semilla) * 10000;
     return x - Math.floor(x);
 }
@@ -26,29 +44,76 @@ function obtenerAleatorioConSemilla(fecha) {
 // traducir texto a español
 async function traducirAEspanol(texto) {
     try {
-        const respuesta = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto)}&langpair=en|es`);
-        const datos = await respuesta.json();
+        console.log('intentando traducir:', texto);
         
-        if (datos.responseStatus === 200) {
-            return datos.responseData.translatedText;
-        } else {
-            return texto;
+        // usar una API más simple que funcione desde el navegador
+        const respuesta = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=${encodeURIComponent(texto)}`);
+        
+        if (respuesta.ok) {
+            const datos = await respuesta.json();
+            const traduccion = datos[0][0][0];
+            
+            if (traduccion) {
+                console.log('traducción exitosa:', traduccion);
+                return traduccion;
+            }
         }
+        
+        console.log('error en traducción, usando texto original');
+        return texto;
+        
     } catch (error) {
         console.error('error al traducir:', error);
         return texto;
     }
 }
 
-// obtener efeméride del día
-async function obtenerEventosHistoricos() {
+// mostrar efeméride actual
+function mostrarEfemerideActual() {
+    if (efemerides.length === 0) return;
+    
+    const efemeride = efemerides[indiceActual];
+    eventoHistoricoElement.innerHTML = `
+        <span class="ano-evento">${efemeride.year}</span>
+        <div class="texto-evento">${efemeride.textoTraducido}</div>
+    `;
+    
+    actualElement.textContent = indiceActual + 1;
+    totalElement.textContent = efemerides.length;
+    
+    // ocultar botón anterior si es la primera efeméride
+    btnAnterior.style.display = indiceActual === 0 ? 'none' : 'inline-block';
+    // ocultar botón siguiente si es la última efeméride
+    btnSiguiente.style.display = indiceActual === efemerides.length - 1 ? 'none' : 'inline-block';
+}
+
+// siguiente efeméride
+function siguienteEfemeride() {
+    if (indiceActual < efemerides.length - 1) {
+        indiceActual++;
+        mostrarEfemerideActual();
+    }
+}
+
+// anterior efeméride
+function anteriorEfemeride() {
+    if (indiceActual > 0) {
+        indiceActual--;
+        mostrarEfemerideActual();
+    }
+}
+
+// obtener múltiples efemérides
+async function obtenerEventosHistoricos(fecha = new Date()) {
     try {
-        const ahora = new Date();
-        const mes = ahora.getMonth() + 1;
-        const dia = ahora.getDate();
+        const mes = fecha.getMonth() + 1;
+        const dia = fecha.getDate();
+        
+        console.log('buscando efemérides para:', dia, '/', mes);
         
         cargandoElement.style.display = 'flex';
         eventoHistoricoElement.style.display = 'none';
+        contadorElement.style.display = 'none';
         
         const respuesta = await fetch(`https://history.muffinlabs.com/date/${mes}/${dia}`);
         
@@ -60,28 +125,50 @@ async function obtenerEventosHistoricos() {
         
         const eventos = datos.data.Events || [];
         if (eventos.length === 0) {
-            throw new Error('No hay eventos históricos para hoy');
+            throw new Error('No hay eventos históricos para esta fecha');
         }
         
-        const indiceAleatorio = Math.floor(obtenerAleatorioConSemilla(ahora) * eventos.length);
-        const eventoDelDia = eventos[indiceAleatorio];
+        console.log('eventos encontrados:', eventos.length);
         
-        const textoTraducido = await traducirAEspanol(eventoDelDia.text);
+        // seleccionar hasta 5 eventos únicos
+        efemerides = [];
+        const eventosSeleccionados = new Set();
         
-        eventoHistoricoElement.innerHTML = `
-            <span class="ano-evento">${eventoDelDia.year}</span>
-            <div class="texto-evento">${textoTraducido}</div>
-        `;
+        for (let i = 0; i < Math.min(maxEfemerides, eventos.length); i++) {
+            const semilla = (fecha.getMonth() + 1) * 100 + fecha.getDate() + i;
+            const x = Math.sin(semilla) * 10000;
+            const indiceAleatorio = Math.floor((x - Math.floor(x)) * eventos.length);
+            
+            if (!eventosSeleccionados.has(indiceAleatorio)) {
+                eventosSeleccionados.add(indiceAleatorio);
+                const evento = eventos[indiceAleatorio];
+                
+                console.log('traduciendo evento:', evento.text);
+                const textoTraducido = await traducirAEspanol(evento.text);
+                console.log('traducción:', textoTraducido);
+                
+                efemerides.push({
+                    year: evento.year,
+                    textoTraducido: textoTraducido
+                });
+            }
+        }
+        
+        console.log('efemérides seleccionadas:', efemerides.length);
+        
+        indiceActual = 0;
+        mostrarEfemerideActual();
         
         cargandoElement.style.display = 'none';
         eventoHistoricoElement.style.display = 'block';
+        contadorElement.style.display = 'block';
         
     } catch (error) {
         console.error('error al obtener eventos:', error);
         
         eventoHistoricoElement.innerHTML = `
             <div class="texto-evento">
-                Oops, no pudimos cargar la efeméride de hoy. 
+                Oops, no pudimos cargar las efemérides de esta fecha. 
                 ¡Inténtalo de nuevo en un rato!
             </div>
         `;
@@ -91,10 +178,66 @@ async function obtenerEventosHistoricos() {
     }
 }
 
+// cambiar fecha seleccionada
+function cambiarFecha(fecha) {
+    // verificar que la fecha sea válida
+    if (!(fecha instanceof Date) || isNaN(fecha.getTime())) {
+        console.error('fecha inválida:', fecha);
+        return;
+    }
+    
+    fechaSeleccionada = fecha;
+    fechaActualElement.textContent = formatearFechaActual(fecha);
+    
+    obtenerEventosHistoricos(fecha);
+}
+
+// actualizar selects con fecha actual
+function actualizarSelects(fecha) {
+    selectMes.value = fecha.getMonth() + 1;
+    selectDia.value = fecha.getDate();
+}
+
+// volver a hoy
+function volverAHoy() {
+    const hoy = new Date();
+    actualizarSelects(hoy);
+    cambiarFecha(hoy);
+}
+
 // inicializar aplicación
 function inicializarAplicacion() {
-    fechaActualElement.textContent = formatearFechaActual();
-    obtenerEventosHistoricos();
+    const hoy = new Date();
+    actualizarSelects(hoy);
+    cambiarFecha(hoy);
+}
+
+// eventos de navegación
+btnSiguiente.addEventListener('click', siguienteEfemeride);
+btnAnterior.addEventListener('click', anteriorEfemeride);
+btnHoy.addEventListener('click', volverAHoy);
+
+// evento de cambio de fecha
+selectMes.addEventListener('change', cambiarFechaSeleccionada);
+selectDia.addEventListener('change', cambiarFechaSeleccionada);
+
+function cambiarFechaSeleccionada() {
+    const mes = parseInt(selectMes.value);
+    const dia = parseInt(selectDia.value);
+    const ano = generarAnoAleatorio();
+    
+    console.log('fecha seleccionada:', dia, '/', mes, '/', ano);
+    
+    const nuevaFecha = new Date(ano, mes - 1, dia);
+    console.log('fecha creada:', nuevaFecha);
+    
+    // verificar que la fecha sea válida
+    if (nuevaFecha.getMonth() === mes - 1 && nuevaFecha.getDate() === dia) {
+        console.log('fecha válida, cambiando...');
+        cambiarFecha(nuevaFecha);
+    } else {
+        console.error('fecha inválida:', nuevaFecha);
+    }
 }
 
 // empezar cuando la página esté lista
@@ -107,7 +250,7 @@ function programarSiguienteActualizacion() {
     const tiempoHastaMedianoche = manana - ahora;
     
     setTimeout(() => {
-        inicializarAplicacion();
+        volverAHoy();
         programarSiguienteActualizacion();
     }, tiempoHastaMedianoche);
 }
