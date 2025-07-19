@@ -1,13 +1,40 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Qué día es hoy?</title>
+    <link rel="stylesheet" href="src/style.css">
+    <link rel="icon" href="public/favicon.ico">
+</head>
+<body>
+    <div class="contenedor">
+        <header>
+            <h1>¿Qué día es hoy?</h1>
+        </header>
+        
+        <main>
+            <div class="seccion-fecha">
+                <div class="mostrar-fecha" id="fecha-actual">
+                </div>
+            </div>
+            
+            <div class="seccion-historia">
+                <h2>Efeméride histórica del día</h2>
+                <div class="tarjeta-evento" id="evento-historico">
+                </div>
+                <div class="cargando" id="cargando">
+                    <div class="spinner"></div>
+                    <p>Cargando efeméride...</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Página creada por <a href="https://github.com/agusfdzm" target="_blank">Agustín</a></p>
+        </footer>
+    </div>
+    
+    <script src="src/main.js"></script>
+</body>
 </html>
