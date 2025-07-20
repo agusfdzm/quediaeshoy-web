@@ -70,11 +70,23 @@
             
             <div class="seccion-historia">
                 <h2>Las 5 efemérides del día</h2>
-                <div class="contador" id="contador">
-                    <span id="actual">1</span> de <span id="total">5</span>
+                
+                <div class="indicadores-progreso">
+                    <div class="barra-progreso">
+                        <div class="progreso-fondo"></div>
+                        <div class="progreso-actual" id="progreso-actual"></div>
+                    </div>
+                    <div class="contador" id="contador">
+                        <span id="actual">1</span> de <span id="total">5</span>
+                    </div>
                 </div>
+                
+                <div class="puntos-indicadores" id="puntos-indicadores">
+                </div>
+                
                 <div class="tarjeta-evento" id="evento-historico">
                 </div>
+                
                 <div class="navegacion">
                     <button class="btn" id="btn-anterior">← Anterior</button>
                     <button class="btn" id="btn-siguiente">Siguiente →</button>

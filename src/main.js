@@ -10,12 +10,39 @@ const btnSiguiente = document.getElementById('btn-siguiente');
 const selectMes = document.getElementById('select-mes');
 const selectDia = document.getElementById('select-dia');
 const btnHoy = document.getElementById('btn-hoy');
+const progresoActualElement = document.getElementById('progreso-actual');
+const puntosIndicadoresElement = document.getElementById('puntos-indicadores');
 
 // variables globales
 let efemerides = [];
 let indiceActual = 0;
 const maxEfemerides = 5;
 let fechaSeleccionada = new Date();
+
+// iconos para diferentes tipos de eventos
+const iconosEventos = {
+    guerra: '⚔️',
+    politica: '🏛️',
+    ciencia: '🔬',
+    tecnologia: '💻',
+    arte: '🎨',
+    musica: '🎵',
+    deporte: '⚽',
+    espacio: '🚀',
+    medicina: '🏥',
+    educacion: '📚',
+    transporte: '🚗',
+    comunicacion: '📱',
+    economia: '💰',
+    religion: '⛪',
+    exploracion: '🗺️',
+    invencion: '💡',
+    descubrimiento: '🔍',
+    independencia: '🏁',
+    revolucion: '🔥',
+    paz: '🕊️',
+    default: '📅'
+};
 
 // generar año aleatorio
 function generarAnoAleatorio() {
@@ -58,6 +85,109 @@ function fadeIn(elemento) {
     }, 300);
 }
 
+// determinar icono según el tipo de evento
+function determinarIconoEvento(texto) {
+    const textoLower = texto.toLowerCase();
+    
+    if (textoLower.includes('war') || textoLower.includes('battle') || textoLower.includes('conflict')) {
+        return iconosEventos.guerra;
+    } else if (textoLower.includes('president') || textoLower.includes('government') || textoLower.includes('election')) {
+        return iconosEventos.politica;
+    } else if (textoLower.includes('scientist') || textoLower.includes('discovery') || textoLower.includes('research')) {
+        return iconosEventos.ciencia;
+    } else if (textoLower.includes('computer') || textoLower.includes('technology') || textoLower.includes('software')) {
+        return iconosEventos.tecnologia;
+    } else if (textoLower.includes('artist') || textoLower.includes('painting') || textoLower.includes('art')) {
+        return iconosEventos.arte;
+    } else if (textoLower.includes('music') || textoLower.includes('song') || textoLower.includes('concert')) {
+        return iconosEventos.musica;
+    } else if (textoLower.includes('sport') || textoLower.includes('game') || textoLower.includes('championship')) {
+        return iconosEventos.deporte;
+    } else if (textoLower.includes('space') || textoLower.includes('moon') || textoLower.includes('satellite')) {
+        return iconosEventos.espacio;
+    } else if (textoLower.includes('medical') || textoLower.includes('hospital') || textoLower.includes('doctor')) {
+        return iconosEventos.medicina;
+    } else if (textoLower.includes('university') || textoLower.includes('school') || textoLower.includes('education')) {
+        return iconosEventos.educacion;
+    } else if (textoLower.includes('car') || textoLower.includes('train') || textoLower.includes('transport')) {
+        return iconosEventos.transporte;
+    } else if (textoLower.includes('phone') || textoLower.includes('communication') || textoLower.includes('internet')) {
+        return iconosEventos.comunicacion;
+    } else if (textoLower.includes('economy') || textoLower.includes('money') || textoLower.includes('bank')) {
+        return iconosEventos.economia;
+    } else if (textoLower.includes('church') || textoLower.includes('religion') || textoLower.includes('pope')) {
+        return iconosEventos.religion;
+    } else if (textoLower.includes('explorer') || textoLower.includes('expedition') || textoLower.includes('map')) {
+        return iconosEventos.exploracion;
+    } else if (textoLower.includes('invent') || textoLower.includes('patent') || textoLower.includes('innovation')) {
+        return iconosEventos.invencion;
+    } else if (textoLower.includes('independence') || textoLower.includes('freedom') || textoLower.includes('liberation')) {
+        return iconosEventos.independencia;
+    } else if (textoLower.includes('revolution') || textoLower.includes('rebellion') || textoLower.includes('uprising')) {
+        return iconosEventos.revolucion;
+    } else if (textoLower.includes('peace') || textoLower.includes('treaty') || textoLower.includes('agreement')) {
+        return iconosEventos.paz;
+    }
+    
+    return iconosEventos.default;
+}
+
+// actualizar barra de progreso
+function actualizarBarraProgreso() {
+    if (efemerides.length === 0) return;
+    
+    const porcentaje = ((indiceActual + 1) / efemerides.length) * 100;
+    progresoActualElement.style.width = `${porcentaje}%`;
+}
+
+// crear puntos indicadores
+function crearPuntosIndicadores() {
+    puntosIndicadoresElement.innerHTML = '';
+    
+    for (let i = 0; i < efemerides.length; i++) {
+        const punto = document.createElement('div');
+        punto.className = 'punto-indicador';
+        punto.dataset.index = i;
+        
+        if (i === indiceActual) {
+            punto.classList.add('activo');
+        } else if (i < indiceActual) {
+            punto.classList.add('completado');
+        }
+        
+        punto.addEventListener('click', () => {
+            irAEfemeride(i);
+        });
+        
+        puntosIndicadoresElement.appendChild(punto);
+    }
+}
+
+// ir a una efeméride específica
+function irAEfemeride(indice) {
+    if (indice >= 0 && indice < efemerides.length) {
+        indiceActual = indice;
+        mostrarEfemerideActual();
+        actualizarBarraProgreso();
+        actualizarPuntosIndicadores();
+    }
+}
+
+// actualizar puntos indicadores
+function actualizarPuntosIndicadores() {
+    const puntos = puntosIndicadoresElement.querySelectorAll('.punto-indicador');
+    
+    puntos.forEach((punto, index) => {
+        punto.classList.remove('activo', 'completado');
+        
+        if (index === indiceActual) {
+            punto.classList.add('activo');
+        } else if (index < indiceActual) {
+            punto.classList.add('completado');
+        }
+    });
+}
+
 // traducir texto a español
 async function traducirAEspanol(texto) {
     try {
@@ -91,8 +221,13 @@ function mostrarEfemerideActual() {
     // animación de fade out
     fadeOut(eventoHistoricoElement, () => {
         const efemeride = efemerides[indiceActual];
+        const icono = determinarIconoEvento(efemeride.textoTraducido);
+        
         eventoHistoricoElement.innerHTML = `
-            <span class="ano-evento">${efemeride.year}</span>
+            <div class="encabezado-evento">
+                <div class="icono-evento">${icono}</div>
+                <span class="ano-evento">${efemeride.year}</span>
+            </div>
             <div class="texto-evento">${efemeride.textoTraducido}</div>
         `;
         
@@ -103,6 +238,10 @@ function mostrarEfemerideActual() {
         btnAnterior.style.display = indiceActual === 0 ? 'none' : 'inline-block';
         // ocultar botón siguiente si es la última efeméride
         btnSiguiente.style.display = indiceActual === efemerides.length - 1 ? 'none' : 'inline-block';
+        
+        // actualizar indicadores
+        actualizarBarraProgreso();
+        actualizarPuntosIndicadores();
         
         // animación de fade in
         fadeIn(eventoHistoricoElement);
@@ -136,6 +275,8 @@ async function obtenerEventosHistoricos(fecha = new Date()) {
         cargandoElement.style.display = 'flex';
         eventoHistoricoElement.style.display = 'none';
         contadorElement.style.display = 'none';
+        progresoActualElement.style.width = '0%';
+        puntosIndicadoresElement.innerHTML = '';
         
         const respuesta = await fetch(`http://history.muffinlabs.com/date/${mes}/${dia}`);
         
@@ -183,6 +324,9 @@ async function obtenerEventosHistoricos(fecha = new Date()) {
         cargandoElement.style.display = 'none';
         eventoHistoricoElement.style.display = 'block';
         contadorElement.style.display = 'block';
+        
+        // crear puntos indicadores
+        crearPuntosIndicadores();
         
         // mostrar primera efeméride con animación
         mostrarEfemerideActual();
