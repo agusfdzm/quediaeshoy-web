@@ -13,28 +13,31 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 1.5rem;
 }
 
 .contenedor {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    padding: 3rem;
-    max-width: 600px;
-    width: 90%;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+    padding: 2.5rem;
+    max-width: 1100px;
+    width: 100%;
     text-align: center;
-    margin: 2rem;
+    margin: 0;
     transition: all 0.3s ease;
+    max-height: 92vh;
+    overflow: hidden;
 }
 
 .contenedor:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
 }
 
 header h1 {
-    font-size: 2.5rem;
+    font-size: 2.4rem;
     font-weight: 700;
     color: #2d3748;
     margin-bottom: 2rem;
@@ -50,69 +53,71 @@ header h1:hover {
 }
 
 .seccion-fecha {
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .mostrar-fecha {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 500;
     color: #4a5568;
-    padding: 1rem;
-    background: rgba(102, 126, 234, 0.1);
-    border-radius: 12px;
-    border: 2px solid rgba(102, 126, 234, 0.2);
-    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(102, 126, 234, 0.08);
+    border-radius: 16px;
+    border: 2px solid rgba(102, 126, 234, 0.15);
+    margin-bottom: 1.5rem;
     transition: all 0.3s ease;
 }
 
 .mostrar-fecha:hover {
-    background: rgba(102, 126, 234, 0.15);
-    border-color: rgba(102, 126, 234, 0.3);
-    transform: translateY(-1px);
+    background: rgba(102, 126, 234, 0.12);
+    border-color: rgba(102, 126, 234, 0.25);
+    transform: translateY(-2px);
 }
 
 .busqueda-fecha {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.8rem;
 }
 
 .select-fecha {
-    padding: 0.5rem;
+    padding: 0.7rem 1rem;
     border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
     background: white;
     color: #4a5568;
     cursor: pointer;
-    min-width: 100px;
+    min-width: 110px;
     transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .select-fecha:hover {
     border-color: #667eea;
     background: #f8fafc;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
 }
 
 .select-fecha:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
 .btn-hoy {
-    background: #48bb78;
+    background: linear-gradient(135deg, #48bb78, #38a169);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 500;
+    padding: 0.7rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     position: relative;
     overflow: hidden;
 }
@@ -133,16 +138,23 @@ header h1:hover {
 }
 
 .btn-hoy:hover {
-    background: #38a169;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+    background: linear-gradient(135deg, #38a169, #2f855a);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.3);
+}
+
+.seccion-historia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 .seccion-historia h2 {
     font-size: 1.8rem;
     font-weight: 600;
     color: #2d3748;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     transition: all 0.3s ease;
 }
 
@@ -155,15 +167,17 @@ header h1:hover {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 600px;
 }
 
 .barra-progreso {
     width: 100%;
-    max-width: 400px;
-    height: 8px;
+    max-width: 500px;
+    height: 10px;
     background: #e2e8f0;
-    border-radius: 4px;
+    border-radius: 6px;
     position: relative;
     overflow: hidden;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -176,7 +190,7 @@ header h1:hover {
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, #e2e8f0, #cbd5e0);
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 .progreso-actual {
@@ -185,9 +199,9 @@ header h1:hover {
     left: 0;
     height: 100%;
     background: linear-gradient(90deg, #667eea, #764ba2);
-    border-radius: 4px;
+    border-radius: 6px;
     transition: width 0.5s ease;
-    box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 0 12px rgba(102, 126, 234, 0.4);
 }
 
 .progreso-actual::after {
@@ -198,11 +212,11 @@ header h1:hover {
     width: 20px;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 6px 6px 0;
 }
 
 .contador {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #718096;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -218,14 +232,14 @@ header h1:hover {
 .puntos-indicadores {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    gap: 0.6rem;
+    margin-bottom: 0;
     flex-wrap: wrap;
 }
 
 .punto-indicador {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background: #e2e8f0;
     cursor: pointer;
@@ -235,33 +249,37 @@ header h1:hover {
 
 .punto-indicador:hover {
     background: #cbd5e0;
-    transform: scale(1.2);
+    transform: scale(1.3);
 }
 
 .punto-indicador.activo {
     background: linear-gradient(135deg, #667eea, #764ba2);
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
-    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+    transform: scale(1.2);
 }
 
 .punto-indicador.completado {
     background: #48bb78;
-    box-shadow: 0 0 6px rgba(72, 187, 120, 0.3);
+    box-shadow: 0 0 8px rgba(72, 187, 120, 0.4);
 }
 
 .tarjeta-evento {
     background: #f7fafc;
-    border-radius: 16px;
-    padding: 2rem;
+    border-radius: 20px;
+    padding: 2.5rem;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    margin-bottom: 0;
     text-align: left;
     position: relative;
     overflow: hidden;
     transition: all 0.4s ease;
     opacity: 1;
     transform: translateY(0);
+    width: 100%;
+    max-width: 750px;
+    max-height: 280px;
+    overflow-y: auto;
 }
 
 .tarjeta-evento.fade-out {
@@ -275,8 +293,8 @@ header h1:hover {
 }
 
 .tarjeta-evento:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
     border-color: #667eea;
 }
 
@@ -285,28 +303,28 @@ header h1:hover {
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 5px;
     height: 100%;
     background: linear-gradient(135deg, #667eea, #764ba2);
     transition: all 0.3s ease;
 }
 
 .tarjeta-evento:hover::before {
-    width: 6px;
+    width: 8px;
     background: linear-gradient(135deg, #667eea, #764ba2, #667eea);
 }
 
 .encabezado-evento {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
 }
 
 .icono-evento {
-    font-size: 1.5rem;
-    width: 40px;
-    height: 40px;
+    font-size: 1.8rem;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -315,14 +333,16 @@ header h1:hover {
     color: white;
     flex-shrink: 0;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .tarjeta-evento:hover .icono-evento {
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.15) rotate(8deg);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .ano-evento {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #667eea;
     margin-bottom: 0;
@@ -331,11 +351,11 @@ header h1:hover {
 
 .tarjeta-evento:hover .ano-evento {
     color: #5a67d8;
-    transform: translateX(5px);
+    transform: translateX(8px);
 }
 
 .texto-evento {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     line-height: 1.7;
     color: #4a5568;
     transition: all 0.3s ease;
@@ -345,23 +365,31 @@ header h1:hover {
     color: #2d3748;
 }
 
+.acciones-efemeride {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 0;
+}
+
 .navegacion {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: 1.2rem;
+    margin-bottom: 0;
 }
 
 .btn {
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 500;
+    padding: 0.8rem 1.8rem;
+    border-radius: 12px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     position: relative;
     overflow: hidden;
 }
@@ -383,13 +411,13 @@ header h1:hover {
 
 .btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
     background: linear-gradient(135deg, #5a67d8, #6b46c1);
 }
 
 .btn:active {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .btn:disabled {
@@ -403,22 +431,158 @@ header h1:hover {
     display: none;
 }
 
+.compartir-efemeride {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.btn-compartir {
+    background: linear-gradient(135deg, #f56565, #e53e3e);
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-compartir::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-compartir:hover::before {
+    left: 100%;
+}
+
+.btn-compartir:hover {
+    background: linear-gradient(135deg, #e53e3e, #c53030);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(245, 101, 101, 0.4);
+}
+
+.btn-compartir.activo {
+    background: linear-gradient(135deg, #e53e3e, #c53030);
+    transform: scale(1.1);
+}
+
+.opciones-compartir {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 0.8rem;
+    margin-left: 0.8rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 160px;
+    z-index: 1000;
+    border: 1px solid #e2e8f0;
+    animation: aparecerCompartirDerecha 0.3s ease;
+}
+
+.opciones-compartir.mostrar {
+    display: flex;
+}
+
+@keyframes aparecerCompartirDerecha {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) translateX(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0) scale(1);
+    }
+}
+
+.opcion-compartir {
+    background: #f7fafc;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4a5568;
+    text-align: left;
+}
+
+.opcion-compartir:hover {
+    background: #edf2f7;
+    transform: translateX(5px);
+    color: #2d3748;
+}
+
+.icono-opcion {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.texto-opcion {
+    flex: 1;
+}
+
+.notificacion {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    transform: translateX(400px);
+    transition: all 0.4s ease;
+    z-index: 10000;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.notificacion.mostrar {
+    transform: translateX(0);
+}
+
 .cargando {
     display: none;
     flex-direction: column;
     align-items: center;
-    padding: 2rem;
+    padding: 2.5rem;
     animation: fadeIn 0.5s ease;
 }
 
 .spinner {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border: 4px solid #e2e8f0;
     border-top: 4px solid #667eea;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
 @keyframes spin {
@@ -428,7 +592,7 @@ header h1:hover {
 
 .cargando p {
     color: #718096;
-    font-size: 1rem;
+    font-size: 1.05rem;
     transition: all 0.3s ease;
 }
 
@@ -438,7 +602,7 @@ header h1:hover {
 
 footer {
     margin-top: 2rem;
-    padding-top: 1rem;
+    padding-top: 1.2rem;
     border-top: 1px solid #e2e8f0;
     transition: all 0.3s ease;
 }
@@ -449,7 +613,7 @@ footer:hover {
 
 footer p {
     color: #718096;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
 }
 
@@ -471,53 +635,99 @@ footer a:hover {
 }
 
 @media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    
     .contenedor {
         padding: 2rem;
-        margin: 1rem;
+        margin: 0;
+        max-width: 100%;
     }
     
     header h1 {
         font-size: 2rem;
+        margin-bottom: 1.5rem;
     }
     
     .mostrar-fecha {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+        padding: 0.8rem 1.2rem;
     }
     
     .tarjeta-evento {
-        padding: 1.5rem;
+        padding: 2rem;
+        max-width: 100%;
+        max-height: 260px;
+    }
+    
+    .acciones-efemeride {
+        flex-direction: column;
+        gap: 1rem;
     }
     
     .navegacion {
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.8rem;
     }
     
     .btn {
-        padding: 0.5rem 1rem;
+        padding: 0.7rem 1.5rem;
+    }
+    
+    .btn-compartir {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+    
+    .opciones-compartir {
+        left: 50%;
+        transform: translateX(-50%);
+        margin-left: 0;
+        margin-top: 0.8rem;
+        top: 100%;
     }
     
     .busqueda-fecha {
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.8rem;
     }
     
     .select-fecha {
         width: 100%;
-        max-width: 200px;
+        max-width: 220px;
     }
     
     .puntos-indicadores {
-        gap: 0.3rem;
+        gap: 0.4rem;
     }
     
     .punto-indicador {
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
     }
     
     .barra-progreso {
-        height: 6px;
+        height: 8px;
+    }
+    
+    .icono-evento {
+        width: 40px;
+        height: 40px;
+        font-size: 1.6rem;
+    }
+    
+    .ano-evento {
+        font-size: 1.2rem;
+    }
+    
+    .texto-evento {
+        font-size: 1rem;
+    }
+    
+    .seccion-historia h2 {
+        font-size: 1.6rem;
     }
 }
 

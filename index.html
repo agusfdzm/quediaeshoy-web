@@ -87,9 +87,36 @@
                 <div class="tarjeta-evento" id="evento-historico">
                 </div>
                 
-                <div class="navegacion">
-                    <button class="btn" id="btn-anterior">← Anterior</button>
-                    <button class="btn" id="btn-siguiente">Siguiente →</button>
+                <div class="acciones-efemeride">
+                    <div class="navegacion">
+                        <button class="btn" id="btn-anterior">← Anterior</button>
+                        <button class="btn" id="btn-siguiente">Siguiente →</button>
+                    </div>
+                    
+                    <div class="compartir-efemeride">
+                        <button class="btn-compartir" id="btn-compartir" title="Compartir efeméride">
+                            <span class="icono-compartir">📤</span>
+                        </button>
+                        
+                        <div class="opciones-compartir" id="opciones-compartir">
+                            <button class="opcion-compartir" id="copiar-portapapeles" title="Copiar al portapapeles">
+                                <span class="icono-opcion">📋</span>
+                                <span class="texto-opcion">Copiar</span>
+                            </button>
+                            <button class="opcion-compartir" id="compartir-twitter" title="Compartir en Twitter">
+                                <span class="icono-opcion">🐦</span>
+                                <span class="texto-opcion">Twitter</span>
+                            </button>
+                            <button class="opcion-compartir" id="compartir-whatsapp" title="Compartir en WhatsApp">
+                                <span class="icono-opcion">📱</span>
+                                <span class="texto-opcion">WhatsApp</span>
+                            </button>
+                            <button class="opcion-compartir" id="compartir-url" title="Copiar enlace">
+                                <span class="icono-opcion">🔗</span>
+                                <span class="texto-opcion">Enlace</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="cargando" id="cargando">
@@ -101,6 +128,11 @@
         <footer>
             <p>Página creada por <a href="https://github.com/agusfdzm" target="_blank">Agustín</a></p>
         </footer>
+    </div>
+    
+    <!-- Notificación de copiado -->
+    <div class="notificacion" id="notificacion">
+        <span class="texto-notificacion">¡Copiado al portapapeles!</span>
     </div>
     
     <script src="src/main.js"></script>

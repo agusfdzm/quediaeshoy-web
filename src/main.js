@@ -13,6 +13,15 @@ const btnHoy = document.getElementById('btn-hoy');
 const progresoActualElement = document.getElementById('progreso-actual');
 const puntosIndicadoresElement = document.getElementById('puntos-indicadores');
 
+// elementos de compartir
+const btnCompartir = document.getElementById('btn-compartir');
+const opcionesCompartir = document.getElementById('opciones-compartir');
+const copiarPortapapeles = document.getElementById('copiar-portapapeles');
+const compartirTwitter = document.getElementById('compartir-twitter');
+const compartirWhatsapp = document.getElementById('compartir-whatsapp');
+const compartirUrl = document.getElementById('compartir-url');
+const notificacion = document.getElementById('notificacion');
+
 // variables globales
 let efemerides = [];
 let indiceActual = 0;
@@ -188,6 +197,91 @@ function actualizarPuntosIndicadores() {
     });
 }
 
+// funciones de compartir
+function toggleOpcionesCompartir() {
+    opcionesCompartir.classList.toggle('mostrar');
+    btnCompartir.classList.toggle('activo');
+}
+
+function cerrarOpcionesCompartir() {
+    opcionesCompartir.classList.remove('mostrar');
+    btnCompartir.classList.remove('activo');
+}
+
+function mostrarNotificacion(mensaje, duracion = 3000) {
+    notificacion.querySelector('.texto-notificacion').textContent = mensaje;
+    notificacion.classList.add('mostrar');
+    
+    setTimeout(() => {
+        notificacion.classList.remove('mostrar');
+    }, duracion);
+}
+
+function copiarAlPortapapeles(texto) {
+    navigator.clipboard.writeText(texto).then(() => {
+        mostrarNotificacion('¡Copiado al portapapeles!');
+    }).catch(() => {
+        // fallback para navegadores antiguos
+        const textArea = document.createElement('textarea');
+        textArea.value = texto;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        mostrarNotificacion('¡Copiado al portapapeles!');
+    });
+}
+
+function obtenerTextoEfemeride() {
+    if (efemerides.length === 0 || indiceActual >= efemerides.length) return '';
+    
+    const efemeride = efemerides[indiceActual];
+    const fecha = formatearFechaActual(fechaSeleccionada);
+    return `${fecha}\n\n${efemeride.year}: ${efemeride.textoTraducido}`;
+}
+
+function obtenerUrlEspecifica() {
+    const mes = fechaSeleccionada.getMonth() + 1;
+    const dia = fechaSeleccionada.getDate();
+    const baseUrl = window.location.origin + window.location.pathname;
+    return `${baseUrl}?fecha=${dia}/${mes}`;
+}
+
+function compartirEnTwitter() {
+    const texto = obtenerTextoEfemeride();
+    const url = obtenerUrlEspecifica();
+    const textoCompleto = `${texto}\n\n${url}`;
+    
+    if (textoCompleto.length > 280) {
+        const textoCortado = textoCompleto.substring(0, 277) + '...';
+        const urlEncoded = encodeURIComponent(url);
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(textoCortado)}&url=${urlEncoded}`, '_blank');
+    } else {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(textoCompleto)}`, '_blank');
+    }
+    
+    cerrarOpcionesCompartir();
+    mostrarNotificacion('¡Abriendo Twitter!');
+}
+
+function compartirEnWhatsapp() {
+    const texto = obtenerTextoEfemeride();
+    const url = obtenerUrlEspecifica();
+    const textoCompleto = `${texto}\n\n${url}`;
+    
+    const urlEncoded = encodeURIComponent(textoCompleto);
+    window.open(`https://wa.me/?text=${urlEncoded}`, '_blank');
+    
+    cerrarOpcionesCompartir();
+    mostrarNotificacion('¡Abriendo WhatsApp!');
+}
+
+function copiarUrl() {
+    const url = obtenerUrlEspecifica();
+    copiarAlPortapapeles(url);
+    cerrarOpcionesCompartir();
+}
+
 // traducir texto a español
 async function traducirAEspanol(texto) {
     try {
@@ -357,6 +451,12 @@ function cambiarFecha(fecha) {
     fechaSeleccionada = fecha;
     fechaActualElement.textContent = formatearFechaActual(fecha);
     
+    // actualizar URL sin recargar la página
+    const mes = fecha.getMonth() + 1;
+    const dia = fecha.getDate();
+    const nuevaUrl = `${window.location.pathname}?fecha=${dia}/${mes}`;
+    window.history.pushState({}, '', nuevaUrl);
+    
     obtenerEventosHistoricos(fecha);
 }
 
@@ -373,17 +473,54 @@ function volverAHoy() {
     cambiarFecha(hoy);
 }
 
-// inicializar aplicación
-function inicializarAplicacion() {
+// cargar fecha desde URL
+function cargarFechaDesdeUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fechaParam = urlParams.get('fecha');
+    
+    if (fechaParam) {
+        const [dia, mes] = fechaParam.split('/').map(Number);
+        if (dia && mes && dia >= 1 && dia <= 31 && mes >= 1 && mes <= 12) {
+            const ano = generarAnoAleatorio();
+            const fecha = new Date(ano, mes - 1, dia);
+            cambiarFecha(fecha);
+            return;
+        }
+    }
+    
+    // si no hay fecha válida en URL, cargar fecha actual
     const hoy = new Date();
     actualizarSelects(hoy);
     cambiarFecha(hoy);
+}
+
+// inicializar aplicación
+function inicializarAplicacion() {
+    cargarFechaDesdeUrl();
 }
 
 // eventos de navegación
 btnSiguiente.addEventListener('click', siguienteEfemeride);
 btnAnterior.addEventListener('click', anteriorEfemeride);
 btnHoy.addEventListener('click', volverAHoy);
+
+// eventos de compartir
+btnCompartir.addEventListener('click', toggleOpcionesCompartir);
+copiarPortapapeles.addEventListener('click', () => {
+    const texto = obtenerTextoEfemeride();
+    copiarAlPortapapeles(texto);
+    cerrarOpcionesCompartir();
+});
+compartirTwitter.addEventListener('click', compartirEnTwitter);
+compartirWhatsapp.addEventListener('click', compartirEnWhatsapp);
+compartirUrl.addEventListener('click', copiarUrl);
+
+// cerrar opciones de compartir al hacer click fuera
+document.addEventListener('click', (e) => {
+    if (!btnCompartir.contains(e.target) && !opcionesCompartir.contains(e.target)) {
+        cerrarOpcionesCompartir();
+    }
+});
 
 // evento de cambio de fecha
 selectMes.addEventListener('change', cambiarFechaSeleccionada);
