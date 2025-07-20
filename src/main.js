@@ -24,11 +24,11 @@ function generarAnoAleatorio() {
 
 // formatear fecha en español
 function formatearFechaActual(fecha = new Date()) {
-    const opciones = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
     };
     
     return fecha.toLocaleDateString('es-ES', opciones);
@@ -41,12 +41,28 @@ function obtenerAleatorioConSemilla(fecha) {
     return x - Math.floor(x);
 }
 
+// animación de fade out
+function fadeOut(elemento, callback) {
+    elemento.classList.add('fade-out');
+    setTimeout(() => {
+        callback();
+        elemento.classList.remove('fade-out');
+    }, 300);
+}
+
+// animación de fade in
+function fadeIn(elemento) {
+    elemento.classList.add('fade-in');
+    setTimeout(() => {
+        elemento.classList.remove('fade-in');
+    }, 300);
+}
+
 // traducir texto a español
 async function traducirAEspanol(texto) {
     try {
         console.log('intentando traducir:', texto);
         
-        // usar una API más simple que funcione desde el navegador
         const respuesta = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=${encodeURIComponent(texto)}`);
         
         if (respuesta.ok) {
@@ -68,23 +84,29 @@ async function traducirAEspanol(texto) {
     }
 }
 
-// mostrar efeméride actual
+// mostrar efeméride actual con animación
 function mostrarEfemerideActual() {
     if (efemerides.length === 0) return;
     
-    const efemeride = efemerides[indiceActual];
-    eventoHistoricoElement.innerHTML = `
-        <span class="ano-evento">${efemeride.year}</span>
-        <div class="texto-evento">${efemeride.textoTraducido}</div>
-    `;
-    
-    actualElement.textContent = indiceActual + 1;
-    totalElement.textContent = efemerides.length;
-    
-    // ocultar botón anterior si es la primera efeméride
-    btnAnterior.style.display = indiceActual === 0 ? 'none' : 'inline-block';
-    // ocultar botón siguiente si es la última efeméride
-    btnSiguiente.style.display = indiceActual === efemerides.length - 1 ? 'none' : 'inline-block';
+    // animación de fade out
+    fadeOut(eventoHistoricoElement, () => {
+        const efemeride = efemerides[indiceActual];
+        eventoHistoricoElement.innerHTML = `
+            <span class="ano-evento">${efemeride.year}</span>
+            <div class="texto-evento">${efemeride.textoTraducido}</div>
+        `;
+        
+        actualElement.textContent = indiceActual + 1;
+        totalElement.textContent = efemerides.length;
+        
+        // ocultar botón anterior si es la primera efeméride
+        btnAnterior.style.display = indiceActual === 0 ? 'none' : 'inline-block';
+        // ocultar botón siguiente si es la última efeméride
+        btnSiguiente.style.display = indiceActual === efemerides.length - 1 ? 'none' : 'inline-block';
+        
+        // animación de fade in
+        fadeIn(eventoHistoricoElement);
+    });
 }
 
 // siguiente efeméride
@@ -115,7 +137,7 @@ async function obtenerEventosHistoricos(fecha = new Date()) {
         eventoHistoricoElement.style.display = 'none';
         contadorElement.style.display = 'none';
         
-        const respuesta = await fetch(`https://history.muffinlabs.com/date/${mes}/${dia}`);
+        const respuesta = await fetch(`http://history.muffinlabs.com/date/${mes}/${dia}`);
         
         if (!respuesta.ok) {
             throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -157,11 +179,13 @@ async function obtenerEventosHistoricos(fecha = new Date()) {
         console.log('efemérides seleccionadas:', efemerides.length);
         
         indiceActual = 0;
-        mostrarEfemerideActual();
         
         cargandoElement.style.display = 'none';
         eventoHistoricoElement.style.display = 'block';
         contadorElement.style.display = 'block';
+        
+        // mostrar primera efeméride con animación
+        mostrarEfemerideActual();
         
     } catch (error) {
         console.error('error al obtener eventos:', error);
