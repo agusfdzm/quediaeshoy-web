@@ -372,7 +372,7 @@ async function obtenerEventosHistoricos(fecha = new Date()) {
         progresoActualElement.style.width = '0%';
         puntosIndicadoresElement.innerHTML = '';
         
-        const respuesta = await fetch(`http://history.muffinlabs.com/date/${mes}/${dia}`);
+        const respuesta = await fetch(`https://history.muffinlabs.com/date/${mes}/${dia}`);
         
         if (!respuesta.ok) {
             throw new Error(`Error HTTP: ${respuesta.status}`);
