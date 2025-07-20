@@ -441,7 +441,7 @@ async function obtenerEventosHistoricos(fecha = new Date()) {
 }
 
 // cambiar fecha seleccionada
-function cambiarFecha(fecha) {
+function cambiarFecha(fecha, actualizarUrl = true) {
     // verificar que la fecha sea válida
     if (!(fecha instanceof Date) || isNaN(fecha.getTime())) {
         console.error('fecha inválida:', fecha);
@@ -451,11 +451,13 @@ function cambiarFecha(fecha) {
     fechaSeleccionada = fecha;
     fechaActualElement.textContent = formatearFechaActual(fecha);
     
-    // actualizar URL sin recargar la página
-    const mes = fecha.getMonth() + 1;
-    const dia = fecha.getDate();
-    const nuevaUrl = `${window.location.pathname}?fecha=${dia}/${mes}`;
-    window.history.pushState({}, '', nuevaUrl);
+    // actualizar URL solo si se solicita
+    if (actualizarUrl) {
+        const mes = fecha.getMonth() + 1;
+        const dia = fecha.getDate();
+        const nuevaUrl = `${window.location.pathname}?fecha=${dia}/${mes}`;
+        window.history.pushState({}, '', nuevaUrl);
+    }
     
     obtenerEventosHistoricos(fecha);
 }
@@ -470,7 +472,7 @@ function actualizarSelects(fecha) {
 function volverAHoy() {
     const hoy = new Date();
     actualizarSelects(hoy);
-    cambiarFecha(hoy);
+    cambiarFecha(hoy, false); // no actualizar URL al volver a hoy
 }
 
 // cargar fecha desde URL
@@ -483,7 +485,7 @@ function cargarFechaDesdeUrl() {
         if (dia && mes && dia >= 1 && dia <= 31 && mes >= 1 && mes <= 12) {
             const ano = generarAnoAleatorio();
             const fecha = new Date(ano, mes - 1, dia);
-            cambiarFecha(fecha);
+            cambiarFecha(fecha, false); // no actualizar URL al cargar desde URL
             return;
         }
     }
@@ -491,7 +493,7 @@ function cargarFechaDesdeUrl() {
     // si no hay fecha válida en URL, cargar fecha actual
     const hoy = new Date();
     actualizarSelects(hoy);
-    cambiarFecha(hoy);
+    cambiarFecha(hoy, false); // no actualizar URL al cargar fecha actual
 }
 
 // inicializar aplicación
